@@ -1,0 +1,31 @@
+{
+  "name": "SpigotServerManager",
+  "version": "1.0.0",
+  "description": "Spigot Server manager",
+  "main": "index.js",
+  "repository": "https://github.com/AndyIsCool5463/Spigot-Server-Manager.git",
+  "author": "AndyIsCool5463 <andyl5463@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "electron index",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "your.id",
+    "mac": {
+      "category": "your.app.category.type"
+    }
+  },
+  "devDependencies": {
+    "electron": "^5.0.7",
+    "electron-builder": "^21.1.1",
+    "electron-packager": "^14.0.2",
+    "electron-packager-interactive": "^0.1.3",
+    "update-electron-app": "^1.5.0"
+  },
+  "dependencies": {
+    "execa": "^2.0.3"
+  }
+}

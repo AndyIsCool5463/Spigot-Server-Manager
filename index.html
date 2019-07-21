@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <title>huhuhuhuhuhuhuhuhu</title>
+
+    <!-- Stylesheets -->
+    <!-- Scripts -->
+    <script>
+      delete module.exports;
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+  </head>
+  <body>
+    <button id="abbc">CHoose file</button>
+    <code id="JARFILE">No Jar File Selected</code>
+    <hr />
+    <button id="folder">CHoose Folder</button>
+    <code id="folderdir">No Working Directory Selected</code>
+    <hr />
+    <span>
+      <button id="run" disabled>Run Server.</button>
+      <button id="kill" disabled>Kill Server.</button>
+      <button id="clear" disabled>Clear Console.</button>
+    </span>
+    <hr />
+    <div id="output">
+      <ul id="messages"></ul>
+    </div>
+  </body>
+</html>
+<script>
+  const { dialog } = require("electron").remote;
+  const fs = require("fs");
+  let jar, folder;
+  document.getElementById("abbc").addEventListener("click", () => {
+    const a = dialog.showOpenDialog({
+      properties: ["openFile"],
+      filters: [{ name: "Custom File Type", extensions: ["jar"] }]
+    });
+    if (a) {
+      document.getElementById("JARFILE").textContent = a;
+      jar = a;
+    }
+  });
+  document.getElementById("folder").addEventListener("click", () => {
+    const a = dialog.showOpenDialog({
+      properties: ["openDirectory"]
+    });
+    if (a) {
+      document.getElementById("folderdir").textContent = a;
+      folder = a;
+    }
+    if (jar && folder) {
+      document.getElementById("run").disabled = false;
+    }
+    document.getElementById("run").addEventListener("click", () => {
+      var spawn = require("child_process").spawn,
+        proc = spawn(`java`, ["-Xmx6G", "-Xms4G", "-jar", jar], {
+          cwd: `${folder}`
+        });
+      document.getElementById("run").disabled = true;
+      document.getElementById("kill").disabled = false;
+      document.getElementById("clear").disabled = false;
+      document.getElementById("kill").addEventListener("click", () => {
+        proc.kill("SIGINT");
+      });
+      document.getElementById("clear").addEventListener("click", () => {
+        $(function() {
+          $("#messages").empty();
+        });
+      });
+      proc.stdout.on("data", function(data) {
+        $(function() {
+          handleText(data);
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+        console.log("stdout: " + data.toString());
+      });
+
+      proc.stderr.on("data", function(data) {
+        console.log("stderr: " + data.toString());
+      });
+
+      proc.on("exit", function(code) {
+        document.getElementById("run").disabled = false;
+        document.getElementById("kill").disabled = true;
+        console.log("child process exited with code " + code.toString());
+      });
+    });
+  });
+
+  function handleText(data) {
+    return $(function() {
+      $("#messages").append($("<li>").text(data.toString()));
+    });
+  }
+</script>
+<style>
+  body {
+    font: 13px Helvetica, Arial;
+  }
+  #messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  #messages li {
+    padding: 5px 10px;
+  }
+  #messages li:nth-child(odd) {
+    background: #eee;
+  }
+  #messages {
+    margin-bottom: 40px;
+  }
+</style>
