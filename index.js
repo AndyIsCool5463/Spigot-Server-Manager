@@ -10,6 +10,20 @@ setInterval(() => {
 autoUpdater.setFeedURL(feed);
 function createWindow() {
   autoUpdater.checkForUpdates();
+  autoUpdater.on("update-available", () => {
+    const dialogOpts = {
+      type: "info",
+      buttons: ["Restart", "Later"],
+      title: "Application Update",
+      message: process.platform === "win32" ? releaseNotes : releaseName,
+      detail:
+        "A new version has been downloaded. Restart the application to apply the updates."
+    };
+
+    dialog.showMessageBox(dialogOpts, response => {
+      if (response === 0) autoUpdater.quitAndInstall();
+    });
+  });
   // Create the browser window.
   win = new BrowserWindow({
     width: 800,

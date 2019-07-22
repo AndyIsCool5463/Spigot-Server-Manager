@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>huhuhuhuhuhuhuhuhu</title>
+    <title>Spigot Server Manager</title>
 
     <!-- Stylesheets -->
     <!-- Scripts -->
@@ -13,10 +13,10 @@
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
   </head>
   <body>
-    <button id="abbc">CHoose file</button>
+    <button id="abbc">Choose Server JAR</button>
     <code id="JARFILE">No Jar File Selected</code>
     <hr />
-    <button id="folder">CHoose Folder</button>
+    <button id="folder">CHoose Server Folder</button>
     <code id="folderdir">No Working Directory Selected</code>
     <hr />
     <span>
@@ -25,7 +25,7 @@
       <button id="clear" disabled>Clear Console.</button>
     </span>
     <hr />
-    <div id="output">
+    <div id="output" styles="overflow: scroll">
       <ul id="messages"></ul>
     </div>
   </body>
@@ -98,6 +98,10 @@
   }
 </script>
 <style>
+  body {
+    padding: 0px;
+    margin: 0px;
+  }
   body {
     font: 13px Helvetica, Arial;
   }
