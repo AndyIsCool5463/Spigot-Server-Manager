@@ -1,6 +1,6 @@
 {
   "name": "SpigotServerManager",
-  "version": "1.0.0",
+  "version": "v0.4-alpha",
   "description": "Spigot Server manager",
   "main": "index.js",
   "repository": "https://github.com/AndyIsCool5463/Spigot-Server-Manager.git",
