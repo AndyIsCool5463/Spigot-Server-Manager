@@ -1,6 +1,6 @@
 {
   "name": "SpigotServerManager",
-  "version": "0.4",
+  "version": "0.4.0",
   "description": "Spigot Server manager",
   "main": "index.js",
   "repository": "https://github.com/AndyIsCool5463/Spigot-Server-Manager.git",
@@ -11,7 +11,7 @@
     "start": "SET NODE_ENV=test&& electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "release": "electron-builder build"
+    "release": "SET GH_TOKEN=264cba89cbaa69219f4bcb195137d4e413bcbaa4&& electron-builder build"
   },
   "build": {
     "publish": {

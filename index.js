@@ -4,8 +4,7 @@ const { autoUpdater } = require("electron-updater");
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-// you know how fucking cancer it is to add more packages, shit is probably already a gigabyte in file size, you know i have shit internet
-require("electron-reload")(__dirname);
+// you know how fucking cancer it is to add more packages, shit is probably already a gigabyte in file size, you know i have shit interne
 
 // fuck  java script
 function createWindow() {
