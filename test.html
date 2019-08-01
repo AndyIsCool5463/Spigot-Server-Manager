@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Spigot Server Manager</title>
+
+    <!-- Stylesheets -->
+    <!-- Scripts -->
+    <script>
+      delete module.exports;
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+  </head>
+  <body>
+    <button id="abbc">Choose Server JAR</button>
+    <code id="JARFILE">No Jar File Selected</code>
+    <hr />
+    <button id="folder">CHoose Server Folder</button>
+    <code id="folderdir">No Working Directory Selected</code>
+    <hr />
+    <span>
+      <button id="run" disabled>Run Server.</button>
+      <button id="kill" disabled>Kill Server.</button>
+      <button id="clear" disabled>Clear Console.</button>
+    </span>
+    <hr />
+    <div>
+      <div
+        id="output"
+        style="overflow: auto; height: 200px; width:50vw; background-color: azure"
+      >
+        <p id="messages"></p>
+      </div>
+      <span>
+        <input id="command" type="text" placeholder="Enter Commands Here" />
+        <button id="enterCmd" type="button">submit</button>
+      </span>
+    </div>
+  </body>
+</html>
+<script>
+  const os = require("os");
+  const maxMemText = document.getElementById("maxMem");
+  const maxMem = formatBytes(os.freemem);
+  const { dialog } = require("electron").remote;
+  const fs = require("fs");
+  const colors = require("colors");
+  colors.enabled = true;
+  let proc;
+  let shitfuck = "";
+  setTimeout(() => {
+    document.getElementById("freeMem").text = formatBytes(os.freemem);
+  }, 5000);
+  let jar, folder;
+  document.getElementById("abbc").addEventListener("click", () => {
+    const a = dialog.showOpenDialog({
+      properties: ["openFile"],
+      filters: [{ name: "Custom File Type", extensions: ["jar"] }]
+    });
+    if (a) {
+      document.getElementById("JARFILE").textContent = a;
+      jar = a;
+    }
+  });
+  document.getElementById("folder").addEventListener("click", () => {
+    const a = dialog.showOpenDialog({
+      properties: ["openDirectory"]
+    });
+    if (a) {
+      document.getElementById("folderdir").textContent = a;
+      folder = a;
+    }
+    if (jar && folder) {
+      document.getElementById("run").disabled = false;
+    }
+    document.getElementById("run").addEventListener("click", () => {
+      var spawn = require("child_process").spawn;
+      proc = spawn(`java`, ["-Xmx6G", "-Xms4G", "-jar", jar], {
+        cwd: `${folder}`
+      });
+      document.getElementById("run").disabled = true;
+      document.getElementById("kill").disabled = false;
+      document.getElementById("clear").disabled = false;
+      document.getElementById("kill").addEventListener("click", () => {
+        proc.kill("SIGINT");
+      });
+      document.getElementById("clear").addEventListener("click", () => {
+        $(function() {
+          $("#messages").empty();
+        });
+      });
+
+      proc.stdout.on("data", function(data) {
+        console.log(data.toString());
+        shitfuck.concat(data.toString());
+        document.getElementById("messages").innerHTML = shitfuck;
+
+        //  console.log("stdout: " + data.toString());
+      });
+
+      proc.stderr.on("data", function(data) {
+        console.log("stderr: " + data.toString());
+      });
+
+      proc.on("exit", function(code) {
+        document.getElementById("run").disabled = false;
+        document.getElementById("kill").disabled = true;
+        console.log("child process exited with code " + code.toString());
+      });
+    });
+  });
+  // Ill leave an option for writing to a file and just looking thru file to have better console explerience with the cost of more HDD work or direct from proc.
+  const writeStream = fs.WriteStream("./output");
+  function handleText(data) {
+    writeStream.write(data);
+    return $(function() {
+      $("#messages").append($("<li>").text(data.toString()));
+    });
+  }
+  function formatBytes(bytes, decimals) {
+    if (bytes === 0) return "0 GB";
+    if (isNaN(parseInt(bytes))) return bytes;
+    if (typeof bytes === "string") bytes = parseInt(bytes);
+    if (bytes === 0) return "0";
+    const k = 1000;
+    const dm = decimals + 1 || 3;
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
+  }
+  document.getElementById("enterCmd").addEventListener("click", () => {
+    const commandText = document.getElementById("command").text;
+    if (!commandText) return;
+    if (!proc) return;
+    proc.stdin.write(`${commandText} \n`);
+  });
+</script>
+<style>
+  body {
+    padding: 0px;
+    margin: 0px;
+  }
+  body {
+    font: 13px Helvetica, Arial;
+  }
+  #messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  #messages li {
+    padding: 5px 10px;
+  }
+  #messages li:nth-child(odd) {
+    background: #eee;
+  }
+  #messages {
+    margin-bottom: 40px;
+  }
+</style>

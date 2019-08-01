@@ -1,0 +1,14 @@
+Loading libraries, please wait...
+2019-07-24 11:51:11,843 main WARN Unable to instantiate org.fusesource.jansi.WindowsAnsiOutputStream
+2019-07-24 11:51:11,844 main WARN Unable to instantiate org.fusesource.jansi.WindowsAnsiOutputStream
+[11:51:14] [Server thread/INFO]: Starting minecraft server version 1.14.4
+[11:51:14] [Server thread/INFO]: Loading properties
+[11:51:15] [Server thread/INFO]: This server is running CraftBukkit version git-Spigot-9de398a-8b09d98 (MC: 1.14.4) (Implementing API version 1.14.4-R0.1-SNAPSHOT)
+[11:51:15] [Server thread/INFO]: Debug logging is disabled
+[11:51:15] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[11:51:15] [Server thread/INFO]: Using 4 threads for Netty based IO
+[11:51:15] [Server thread/INFO]: Default game type: SURVIVAL
+[11:51:15] [Server thread/INFO]: Generating keypair
+[11:51:15] [Server thread/INFO]: Starting Minecraft server on *:25565
+[11:51:15] [Server thread/INFO]: Using default channel type
+[11:51:16] [Server thread/ERROR]: Ambiguous plugin name `WorldEdit' for files `plugins\worldedit-bukkit-7.0.1-rc1-dist.jar' and `plugins\worldedit-bukkit-7.0.0.jar' in `plugins'

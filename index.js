@@ -1,29 +1,31 @@
-const { app, BrowserWindow, dialog, autoUpdater } = require("electron");
+const { app, BrowserWindow, dialog } = require("electron");
+const { autoUpdater } = require("electron-updater");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-const server = "https://your-deployment-url.com";
-const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
-setInterval(() => {
-  autoUpdater.checkForUpdates();
-}, 60000);
-autoUpdater.setFeedURL(feed);
-function createWindow() {
-  autoUpdater.checkForUpdates();
-  autoUpdater.on("update-available", () => {
-    const dialogOpts = {
-      type: "info",
-      buttons: ["Restart", "Later"],
-      title: "Application Update",
-      message: process.platform === "win32" ? releaseNotes : releaseName,
-      detail:
-        "A new version has been downloaded. Restart the application to apply the updates."
-    };
 
-    dialog.showMessageBox(dialogOpts, response => {
-      if (response === 0) autoUpdater.quitAndInstall();
+// you know how fucking cancer it is to add more packages, shit is probably already a gigabyte in file size, you know i have shit internet
+require("electron-reload")(__dirname);
+
+// fuck  java script
+function createWindow() {
+  if (process.env.NODE_ENV != "test") {
+    autoUpdater.checkForUpdates();
+    autoUpdater.on("update-available", () => {
+      const dialogOpts = {
+        type: "info",
+        buttons: ["Restart", "Later"],
+        title: "Application Update",
+        message: process.platform === "win32" ? releaseNotes : releaseName,
+        detail:
+          "A new version has been downloaded. Restart the application to apply the updates."
+      };
+
+      dialog.showMessageBox(dialogOpts, response => {
+        if (response === 0) autoUpdater.quitAndInstall();
+      });
     });
-  });
+  }
   // Create the browser window.
   win = new BrowserWindow({
     width: 800,
@@ -33,6 +35,7 @@ function createWindow() {
     }
   });
   win.loadFile("index.html");
+  win.maximize();
   // win.webContents.openDevTools();
 
   // Emitted when the window is closed.
