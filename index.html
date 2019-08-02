@@ -72,7 +72,7 @@
           type="text"
           class="form-control"
           placeholder="kill @a"
-          id="command"
+          id="commandInput"
           style="max-width: 56.3vw"
           aria-label="Enter Commands Here"
           aria-describedby="button-addon2"
@@ -81,7 +81,8 @@
           <button
             class="btn btn-outline-secondary"
             type="button"
-            id="button-addon2"
+            id="luul"
+            onclick="sendInput()"
           >
             Enter
           </button>
@@ -265,14 +266,23 @@
       });
     });
   });
-
   function fuckoffbraindeadJSDevs(chunk) {
     $(function() {
       if (/\n/g.test(chunk)) {
         let chunkArr = chunk.replace(/\n/g, "ABC").split("ABC");
         console.log(chunkArr);
         chunkArr.forEach((i, count) => {
-          $("#messages").append($('<li style="white-space: pre">').text(i));
+          const warning = /thread\/WARN/;
+          const info = /thread\/INFO/;
+          if (warning.test(i)) {
+            $("#messages").append(
+              $(
+                '<li style="white-space: pre; background-color: rgba(231,234,21,0.5)">'
+              ).text(i)
+            );
+          } else {
+            $("#messages").append($('<li style="white-space: pre">').text(i));
+          }
         });
       } else {
         // THIS IS USED WHEN THERE IS NO LINE BREAKS....
@@ -298,6 +308,20 @@
     if (!commandText) return;
     if (!proc) return;
     proc.stdin.write(`${commandText} \n`);
+  });
+
+  document.getElementById("luul").addEventListener("click", () => {
+    const input = document.getElementById("commandInput").value;
+    proc.stdin.write(`${input}\n`);
+    if (input) {
+      $(function() {
+        $("#messages").append($('<li style="white-space: pre;').text(input));
+      });
+
+      if (proc.stdin.writable) {
+        proc.stdin.write(input + "\n");
+      }
+    }
   });
 </script>
 <style>
